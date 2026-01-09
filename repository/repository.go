@@ -5,7 +5,7 @@ import (
 
 	"cloud.google.com/go/datastore"
 	"github.com/AndroX7/gostore/builder"
-	"github.com/AndroX7/gostore/helper"
+	"github.com/AndroX7/gostore/exec"
 )
 
 // Repository interface defines standard CRUD operations
@@ -21,63 +21,63 @@ type Repository interface {
 
 // BaseRepository implements common repository operations
 type BaseRepository struct {
-	client *datastore.Client
-	kind   string
-	helper *helper.Helper
+	client   *datastore.Client
+	kind     string
+	executor *exec.Exec
 }
 
 // NewBaseRepository creates a new base repository
 func NewBaseRepository(client *datastore.Client, kind string) *BaseRepository {
 	return &BaseRepository{
-		client: client,
-		kind:   kind,
-		helper: helper.NewHelper(client),
+		client:   client,
+		kind:     kind,
+		executor: exec.NewExec(),
 	}
 }
 
 // GetByID retrieves entity by ID
 func (r *BaseRepository) GetByID(ctx context.Context, id interface{}, dest interface{}) error {
-	return r.helper.GetByID(ctx, r.kind, id, dest)
+	return r.executor.GetByID(ctx, r.kind, id, dest)
 }
 
 // GetMulti retrieves multiple entities
 func (r *BaseRepository) GetMulti(ctx context.Context, ids []interface{}, dest interface{}) error {
-	return r.helper.GetMulti(ctx, r.kind, ids, dest)
+	return r.executor.GetMulti(ctx, r.kind, ids, dest)
 }
 
 // Create creates a new entity
 func (r *BaseRepository) Create(ctx context.Context, id interface{}, entity interface{}) error {
-	return r.helper.Create(ctx, r.kind, id, entity)
+	return r.executor.Create(ctx, r.kind, id, entity)
 }
 
 // CreateMulti creates multiple entities
 func (r *BaseRepository) CreateMulti(ctx context.Context, ids []interface{}, entities interface{}) error {
-	return r.helper.CreateMulti(ctx, r.kind, ids, entities)
+	return r.executor.CreateMulti(ctx, r.kind, ids, entities)
 }
 
 // Update updates an entity
 func (r *BaseRepository) Update(ctx context.Context, id interface{}, entity interface{}) error {
-	return r.helper.Update(ctx, r.kind, id, entity)
+	return r.executor.Update(ctx, r.kind, id, entity)
 }
 
 // UpdateMulti updates multiple entities
 func (r *BaseRepository) UpdateMulti(ctx context.Context, ids []interface{}, entities interface{}) error {
-	return r.helper.UpdateMulti(ctx, r.kind, ids, entities)
+	return r.executor.UpdateMulti(ctx, r.kind, ids, entities)
 }
 
 // Delete deletes an entity
 func (r *BaseRepository) Delete(ctx context.Context, id interface{}) error {
-	return r.helper.Delete(ctx, r.kind, id)
+	return r.executor.Delete(ctx, r.kind, id)
 }
 
 // DeleteMulti deletes multiple entities
 func (r *BaseRepository) DeleteMulti(ctx context.Context, ids []interface{}) error {
-	return r.helper.DeleteMulti(ctx, r.kind, ids)
+	return r.executor.DeleteMulti(ctx, r.kind, ids)
 }
 
 // Exists checks if entity exists
 func (r *BaseRepository) Exists(ctx context.Context, id interface{}) (bool, error) {
-	return r.helper.Exists(ctx, r.kind, id)
+	return r.executor.Exists(ctx, r.kind, id)
 }
 
 // Query executes a query with flexible parameters
@@ -140,32 +140,32 @@ func (r *BaseRepository) Count(ctx context.Context, filters interface{}) (int, e
 
 // FindAll retrieves all entities
 func (r *BaseRepository) FindAll(ctx context.Context, dest interface{}) error {
-	return r.helper.FindAll(ctx, r.kind, dest)
+	return r.executor.FindAll(ctx, r.kind, dest)
 }
 
 // FindWhere retrieves entities matching filters
 func (r *BaseRepository) FindWhere(ctx context.Context, filters map[string]interface{}, dest interface{}) error {
-	return r.helper.FindWhere(ctx, r.kind, filters, dest)
+	return r.executor.FindWhere(ctx, r.kind, filters, dest)
 }
 
 // FindOne retrieves first matching entity
 func (r *BaseRepository) FindOne(ctx context.Context, filters map[string]interface{}, dest interface{}) error {
-	return r.helper.FindOne(ctx, r.kind, filters, dest)
+	return r.executor.FindOne(ctx, r.kind, filters, dest)
 }
 
 // Paginate retrieves paginated results
 func (r *BaseRepository) Paginate(ctx context.Context, filters map[string]interface{}, page, pageSize int, dest interface{}) (*builder.PaginationResult, error) {
-	return r.helper.Paginate(ctx, r.kind, filters, page, pageSize, dest)
+	return r.executor.Paginate(ctx, r.kind, filters, page, pageSize, dest)
 }
 
 // BulkCreate creates entities in batches
 func (r *BaseRepository) BulkCreate(ctx context.Context, entities interface{}, batchSize int) error {
-	return r.helper.BulkCreate(ctx, r.kind, entities, batchSize)
+	return r.executor.BulkCreate(ctx, r.kind, entities, batchSize)
 }
 
 // BulkDelete deletes entities matching query
 func (r *BaseRepository) BulkDelete(ctx context.Context, filters map[string]interface{}) (int, error) {
-	return r.helper.BulkDelete(ctx, r.kind, filters)
+	return r.executor.BulkDelete(ctx, r.kind, filters)
 }
 
 // Private helper methods
