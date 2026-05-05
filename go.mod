@@ -1,6 +1,6 @@
 module github.com/AndroX7/gostore
 
-go 1.25.5
+go 1.25.0
 
 require (
 	cloud.google.com/go/datastore v1.21.0
